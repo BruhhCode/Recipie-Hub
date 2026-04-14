@@ -1,14 +1,4 @@
 <?php
-/**
- * RecipeHub - PHP Backend API
- * Handles database operations for the Recipe Database
- * 
- * Configuration needed:
- * - Database host, username, password
- * - Replace localhost, root, and password with your actual credentials
- */
-
-// Enable error reporting for development
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 

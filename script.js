@@ -1,8 +1,4 @@
-// ============================================
-// RECIPE DATABASE APPLICATION
-// ============================================
 
-// Sample Recipe Data (from database)
 const recipesData = [
     {
         id: 1,
