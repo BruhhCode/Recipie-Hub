@@ -1,0 +1,17 @@
+{
+  "[sql]": {
+    "editor.defaultFormatter": false,
+    "editor.formatOnSave": false,
+    "editor.suggest.enabled": false
+  },
+  "sql.linter": "off",
+  "mssql.intelliSense.enabled": false,
+  "mssql.linter.enabled": false,
+  "[mssql]": {
+    "editor.suggest.enabled": false
+  },
+  "sqltools.useNodeRuntime": false,
+  "sqlTools.disabled": true
+}
+
+

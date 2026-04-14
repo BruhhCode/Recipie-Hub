@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍲 Recipe Database - Find & Share Amazing Recipes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">🍲 RecipeHub</div>
+        <div class="nav-links">
+            <a href="#" class="nav-link" onclick="showSection('home')">Home</a>
+            <a href="#" class="nav-link" onclick="showSection('recipes')">Recipes</a>
+            <a href="#" class="nav-link" onclick="showSection('add-recipe')">➕ Add Recipe</a>
+            <a href="#" class="nav-link" onclick="showSection('favorites')">❤️ Favorites</a>
+            <a href="#" class="nav-link" onclick="showSection('auth')">Account</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Home Section -->
+<section id="home" class="section">
+    <div class="hero" style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.7), rgba(78, 205, 196, 0.7)); background-size: cover; background-position: center; position: relative;">
+        <div class="hero-content">
+            <h1>Welcome to RecipeHub</h1>
+            <p>Discover, Share, and Enjoy Amazing Recipes from Around the World</p>
+            <button class="btn-primary" onclick="showSection('recipes')">Explore Recipes</button>
+        </div>
+    </div>
+</section>
+
+<!-- Authentication Section -->
+<section id="auth" class="section" style="display:none;">
+    <div class="auth-container">
+        <div class="login-form">
+            <h2>Login / Register</h2>
+            <input type="text" id="username" placeholder="Username" class="form-input">
+            <input type="email" id="email" placeholder="Email" class="form-input">
+            <input type="password" id="password" placeholder="Password" class="form-input">
+            <button class="btn-primary" onclick="loginUser()">Login</button>
+            <p id="auth-message" class="message"></p>
+        </div>
+    </div>
+</section>
+
+<!-- Add Recipe Section -->
+<section id="add-recipe" class="section" style="display:none;">
+    <div class="add-recipe-container">
+        <h1>➕ Add New Recipe</h1>
+        
+        <form id="addRecipeForm" class="add-recipe-form">
+            <!-- Basic Information -->
+            <div class="form-section">
+                <h3>📋 Basic Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="recipeTitle">Recipe Title *</label>
+                        <input type="text" id="recipeTitle" required placeholder="e.g., Chicken Biryani">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipeCategory">Category *</label>
+                        <select id="recipeCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Main Course">Main Course</option>
+                            <option value="Appetizer">Appetizer</option>
+                            <option value="Dessert">Dessert</option>
+                            <option value="Snack">Snack</option>
+                            <option value="Beverage">Beverage</option>
+                            <option value="Breakfast">Breakfast</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="recipeCuisine">Cuisine *</label>
+                        <select id="recipeCuisine" required>
+                            <option value="">Select Cuisine</option>
+                            <option value="Indian">Indian</option>
+                            <option value="Italian">Italian</option>
+                            <option value="Chinese">Chinese</option>
+                            <option value="Thai">Thai</option>
+                            <option value="Mexican">Mexican</option>
+                            <option value="French">French</option>
+                            <option value="Japanese">Japanese</option>
+                            <option value="Mediterranean">Mediterranean</option>
+                            <option value="American">American</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipeDifficulty">Difficulty Level *</label>
+                        <select id="recipeDifficulty" required>
+                            <option value="">Select Difficulty</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="recipeDescription">Description *</label>
+                    <textarea id="recipeDescription" required rows="3" placeholder="Brief description of your recipe..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Time and Servings -->
+            <div class="form-section">
+                <h3>⏱️ Time & Servings</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prepTime">Prep Time (minutes) *</label>
+                        <input type="number" id="prepTime" required min="1" placeholder="15">
+                    </div>
+                    <div class="form-group">
+                        <label for="cookTime">Cook Time (minutes) *</label>
+                        <input type="number" id="cookTime" required min="1" placeholder="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="serves">Serves *</label>
+                        <input type="number" id="serves" required min="1" placeholder="4">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ingredients -->
+            <div class="form-section">
+                <h3>📦 Ingredients</h3>
+                <div id="ingredientsContainer">
+                    <div class="ingredient-row">
+                        <input type="text" class="ingredient-name" placeholder="Ingredient name" required>
+                        <input type="number" class="ingredient-quantity" step="0.01" placeholder="Quantity" required>
+                        <input type="text" class="ingredient-unit" placeholder="Unit (g, ml, cups, etc.)" required>
+                        <button type="button" class="btn-remove" onclick="removeIngredient(this)">❌</button>
+                    </div>
+                </div>
+                <button type="button" class="btn-secondary" onclick="addIngredient()">➕ Add Ingredient</button>
+            </div>
+            
+            <!-- Cooking Steps -->
+            <div class="form-section">
+                <h3>👨‍🍳 Cooking Steps</h3>
+                <div id="stepsContainer">
+                    <div class="step-row">
+                        <span class="step-number">1.</span>
+                        <textarea class="step-description" placeholder="Describe this cooking step..." rows="2" required></textarea>
+                        <input type="number" class="step-time" placeholder="Time (min)" min="1">
+                        <button type="button" class="btn-remove" onclick="removeStep(this)">❌</button>
+                    </div>
+                </div>
+                <button type="button" class="btn-secondary" onclick="addStep()">➕ Add Step</button>
+            </div>
+            
+            <!-- Nutrition (Optional) -->
+            <div class="form-section">
+                <h3>🥗 Nutrition Information (Optional)</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="calories">Calories (per serving)</label>
+                        <input type="number" id="calories" min="0" placeholder="350">
+                    </div>
+                    <div class="form-group">
+                        <label for="protein">Protein (g)</label>
+                        <input type="number" id="protein" min="0" step="0.1" placeholder="15">
+                    </div>
+                    <div class="form-group">
+                        <label for="carbs">Carbs (g)</label>
+                        <input type="number" id="carbs" min="0" step="0.1" placeholder="25">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fat">Fat (g)</label>
+                        <input type="number" id="fat" min="0" step="0.1" placeholder="22">
+                    </div>
+                    <div class="form-group">
+                        <label for="fiber">Fiber (g)</label>
+                        <input type="number" id="fiber" min="0" step="0.1" placeholder="2">
+                    </div>
+                    <div class="form-group">
+                        <label for="sodium">Sodium (mg)</label>
+                        <input type="number" id="sodium" min="0" placeholder="650">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Dietary Information:</label>
+                    <div class="dietary-checkboxes">
+                        <label><input type="checkbox" value="Vegetarian"> Vegetarian</label>
+                        <label><input type="checkbox" value="Vegan"> Vegan</label>
+                        <label><input type="checkbox" value="Gluten-Free"> Gluten-Free</label>
+                        <label><input type="checkbox" value="Dairy-Free"> Dairy-Free</label>
+                        <label><input type="checkbox" value="High-Protein"> High-Protein</label>
+                        <label><input type="checkbox" value="Low-Carb"> Low-Carb</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Submit -->
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">🍳 Add Recipe</button>
+                <button type="button" class="btn-secondary" onclick="resetForm()">🔄 Reset Form</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Recipes Section -->
+<section id="recipes" class="section" style="display:none;">
+    <div class="recipes-container">
+        <h1>🔍 Recipe Browser</h1>
+        
+        <!-- Search and Filters -->
+        <div class="filters-panel">
+            <div class="filter-group">
+                <input type="text" id="search" placeholder="Search by recipe name or ingredient..." class="search-input">
+            </div>
+            
+            <div class="filter-group">
+                <label>Category:</label>
+                <select id="categoryFilter" onchange="applyFilters()" class="filter-select">
+                    <option value="">All Categories</option>
+                    <option value="Main Course">Main Course</option>
+                    <option value="Dessert">Dessert</option>
+                    <option value="Appetizer">Appetizer</option>
+                    <option value="Snack">Snack</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Cuisine:</label>
+                <select id="cuisineFilter" onchange="applyFilters()" class="filter-select">
+                    <option value="">All Cuisines</option>
+                    <option value="Indian">Indian</option>
+                    <option value="Italian">Italian</option>
+                    <option value="Asian">Asian</option>
+                    <option value="Thai">Thai</option>
+                    <option value="Western">Western</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Dietary Preference:</label>
+                <select id="dietaryFilter" onchange="applyFilters()" class="filter-select">
+                    <option value="">All Diets</option>
+                    <option value="Vegetarian">Vegetarian</option>
+                    <option value="Vegan">Vegan</option>
+                    <option value="Gluten-Free">Gluten-Free</option>
+                    <option value="High-Protein">High-Protein</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Cooking Time:</label>
+                <select id="timeFilter" onchange="applyFilters()" class="filter-select">
+                    <option value="">Any Time</option>
+                    <option value="15">Under 15 min</option>
+                    <option value="30">Under 30 min</option>
+                    <option value="60">Under 1 hour</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Difficulty:</label>
+                <select id="difficultyFilter" onchange="applyFilters()" class="filter-select">
+                    <option value="">All Levels</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+
+            <button class="btn-secondary" onclick="resetFilters()">Reset Filters</button>
+        </div>
+
+        <!-- Sort Options -->
+        <div class="sort-group">
+            <label>Sort by:</label>
+            <select id="sortSelect" onchange="applyFilters()" class="filter-select">
+                <option value="name">Recipe Name</option>
+                <option value="rating">Rating</option>
+                <option value="time">Cooking Time</option>
+            </select>
+        </div>
+
+        <!-- Recipes Grid -->
+        <div id="recipesGrid" class="recipes-grid">
+            <!-- Recipes will be loaded here -->
+        </div>
+    </div>
+</section>
+
+<!-- Recipe Details Modal -->
+<div id="recipeModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeRecipeModal()">&times;</span>
+        
+        <div class="recipe-detail-container">
+            <div class="recipe-header">
+                <div class="recipe-header-top">
+                    <div class="recipe-emoji" id="detailEmoji">🍽️</div>
+                    <div class="recipe-header-info">
+                        <h1 id="detailTitle"></h1>
+                        <div class="recipe-rating">
+                            <span id="detailRating">★★★★★</span>
+                            <span id="detailReviewCount">(0 reviews)</span>
+                        </div>
+                    </div>
+                    <button class="btn-favorite" id="favBtn" onclick="toggleFavorite()">❤️ Add to Favorites</button>
+                </div>
+            </div>
+
+            <div class="recipe-info-grid">
+                <div class="info-box">
+                    <strong>⏱️ Prep Time:</strong> <span id="detailPrepTime"></span>
+                </div>
+                <div class="info-box">
+                    <strong>🔥 Cook Time:</strong> <span id="detailCookTime"></span>
+                </div>
+                <div class="info-box">
+                    <strong>🍽️ Serves:</strong> <span id="detailServes"></span>
+                </div>
+                <div class="info-box">
+                    <strong>📊 Difficulty:</strong> <span id="detailDifficulty"></span>
+                </div>
+            </div>
+
+            <div class="recipe-tabs">
+                <button class="tab-btn active" onclick="switchTab('ingredients')">📦 Ingredients</button>
+                <button class="tab-btn" onclick="switchTab('steps')">👨‍🍳 Steps</button>
+                <button class="tab-btn" onclick="switchTab('nutrition')">🥗 Nutrition</button>
+                <button class="tab-btn" onclick="switchTab('reviews')">⭐ Reviews</button>
+            </div>
+
+            <!-- Ingredients Tab -->
+            <div id="ingredients-tab" class="tab-content active">
+                <h3>Ingredients</h3>
+                <div id="ingredientsList" class="ingredients-list"></div>
+            </div>
+
+            <!-- Steps Tab -->
+            <div id="steps-tab" class="tab-content">
+                <h3>Cooking Steps</h3>
+                <div id="stepsList" class="steps-list"></div>
+            </div>
+
+            <!-- Nutrition Tab -->
+            <div id="nutrition-tab" class="tab-content">
+                <h3>Nutritional Information</h3>
+                <div id="nutritionInfo" class="nutrition-info"></div>
+                <div id="dietaryLabels" class="dietary-labels"></div>
+            </div>
+
+            <!-- Reviews Tab -->
+            <div id="reviews-tab" class="tab-content">
+                <h3>Reviews & Ratings</h3>
+                
+                <div class="review-form">
+                    <h4>Leave a Review</h4>
+                    <div class="rating-selector">
+                        <label>Rating:</label>
+                        <div class="stars" id="ratingStars">
+                            <span class="star" data-value="1" onclick="setRating(1)">★</span>
+                            <span class="star" data-value="2" onclick="setRating(2)">★</span>
+                            <span class="star" data-value="3" onclick="setRating(3)">★</span>
+                            <span class="star" data-value="4" onclick="setRating(4)">★</span>
+                            <span class="star" data-value="5" onclick="setRating(5)">★</span>
+                        </div>
+                    </div>
+                    <textarea id="reviewComment" placeholder="Share your thoughts about this recipe..." rows="4" class="form-input"></textarea>
+                    <button class="btn-primary" onclick="submitReview()">Submit Review</button>
+                </div>
+
+                <div id="reviewsList" class="reviews-list"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Favorites Section -->
+<section id="favorites" class="section" style="display:none;">
+    <div class="recipes-container">
+        <h1>❤️ Your Favorite Recipes</h1>
+        <div id="favoritesList" class="recipes-grid">
+            <!-- Favorites will be loaded here -->
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <p>&copy; 2024 RecipeHub - Share your culinary passion | All rights reserved</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
